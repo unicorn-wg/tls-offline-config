@@ -183,7 +183,8 @@ Internet-Draft             TLS Offline Config             September 2015
                ServerCipherSuites;
            case signature_algorithms:
                SupportedSignatureAndHashAlgorithms;
-           case certificate: Certificate;
+           case certificate:
+               Certificate;
        } extension_data;
    } ConfigurationExtension;
 
@@ -216,8 +217,7 @@ Internet-Draft             TLS Offline Config             September 2015
    An offline server configuration MUST NOT be used if it does not
    include the "server_cipher_suites" extension.
 
-   A client can choose any cipher suite from this set for protecting its
-   first flight.  The client MUST include the selected value in the
+
 
 
 
@@ -226,6 +226,8 @@ Thomson                  Expires March 14, 2016                 [Page 4]
 Internet-Draft             TLS Offline Config             September 2015
 
 
+   A client can choose any cipher suite from this set for protecting its
+   first flight.  The client MUST include the selected value in the
    cipher_suites field of its ClientHello.  A server MAY reject either
    the replayable data or the entire handshake if the client selects a
    cipher suite that it does not claim to support.
@@ -271,8 +273,6 @@ Internet-Draft             TLS Offline Config             September 2015
 
    Enabling Zero-RTT in this fashion does not alter the limitations of
    sending data in the client's first flight of messages.  In
-   particular, Zero-RTT data is not protected from replay.  Details of
-   these limitations are provided in [I-D.ietf-tls-tls13].
 
 
 
@@ -281,6 +281,9 @@ Thomson                  Expires March 14, 2016                 [Page 5]
 
 Internet-Draft             TLS Offline Config             September 2015
 
+
+   particular, Zero-RTT data is not protected from replay.  Details of
+   these limitations are provided in [I-D.ietf-tls-tls13].
 
    Server configurations that are generated offline MUST be validated.
    Failure to correctly validate the server configuration would allow an
@@ -326,9 +329,6 @@ Internet-Draft             TLS Offline Config             September 2015
               T. Kivinen, "Using Raw Public Keys in Transport Layer
               Security (TLS) and Datagram Transport Layer Security
               (DTLS)", RFC 7250, June 2014.
-
-
-
 
 
 
