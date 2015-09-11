@@ -93,8 +93,8 @@ A client MUST NOT use an offline server configuration unless the signature is
 successfully validated against the public key in the included end-entity
 certificate.  Equally, a client MUST NOT use an offline server configuration
 unless the end-entity certificate or public key is successfully validated
-according to the rules for the using protocol and application (for example,
-[RFC2818] [RFC6125]).
+according to the rules for the using protocol and application (such as [RFC2818]
+or [RFC6125]).
 
 
 # Server Configuration Extensions {#extensions}
