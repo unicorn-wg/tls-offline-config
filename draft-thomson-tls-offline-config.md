@@ -41,7 +41,7 @@ configuration information that can be used outside of TLS.
 
 --- middle
 
-# Introduction        {#intro}
+# Introduction {#intro}
 
 A client that establishes a TLS connection to a server is unable to send any
 encrypted data to the server prior to receiving a server configuration.  This
@@ -61,7 +61,7 @@ the TLS handshake.  This allows for alternative methods of delivery for the
 server configuration.
 
 
-## Terminology          {#terms}
+## Terminology {#terms}
 
 RFC 2119 [RFC2119] defines the terms MUST, SHOULD, and MAY.
 
