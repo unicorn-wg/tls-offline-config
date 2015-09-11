@@ -117,7 +117,8 @@ struct {
             ServerCipherSuites;
         case signature_algorithms:
             SupportedSignatureAndHashAlgorithms;
-        case certificate: Certificate;
+        case certificate:
+            Certificate;
     } extension_data;
 } ConfigurationExtension;
 
@@ -220,9 +221,10 @@ registry established by [I-D.ietf-tls-tls13]:
   * signature_algorithms {{signature_algorithms}}
   * certificate {{certificate}}
 
+
 --- back
 
-# Acknowledgements
+# Acknowledgements {#ack}
 
 This document is better for the contributions of Wen-Teh Chang, Christian
 Huitema, Adam Langley, Eric Rescorla, and others.
