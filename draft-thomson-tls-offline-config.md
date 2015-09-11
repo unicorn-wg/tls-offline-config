@@ -97,6 +97,7 @@ according to the rules for the using protocol and application (such as [RFC2818]
 or [RFC6125]).
 
 
+
 # Server Configuration Extensions {#extensions}
 
 The offline server configuration uses the same ServerConfiguration format that
