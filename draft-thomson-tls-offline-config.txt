@@ -4,21 +4,22 @@
 
 tls                                                           M. Thomson
 Internet-Draft                                                   Mozilla
-Intended status: Standards Track                      September 11, 2015
-Expires: March 14, 2016
+Intended status: Standards Track                      September 22, 2015
+Expires: March 25, 2016
 
 
- Offline Server Configuration for Transport Layer Security 1.3 Zero-RTT
+    Offline Server Configuration for Zero Round Trip Transport Layer
+                                Security
                 draft-thomson-tls-offline-config-latest
 
 Abstract
 
-   Zero-RTT operation in TLS relies on a client knowing about a server
-   configuration prior to establishing a connection.  TLS provides a
-   mechanism for a server to provide a configuration during a handshake
-   so that subsequent connections can use Zero-RTT.  This document
-   defines a format for this configuration information that can be used
-   outside of TLS.
+   Zero round trip operation in TLS relies on a client knowing about a
+   server configuration prior to establishing a connection.  TLS
+   provides a mechanism for a server to provide a configuration during a
+   handshake so that subsequent connections can send encrypted data in
+   its first flight of messages.  This document defines a format for
+   this configuration information that can be used outside of TLS.
 
 Status of This Memo
 
@@ -35,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 14, 2016.
+   This Internet-Draft will expire on March 25, 2016.
 
 Copyright Notice
 
@@ -52,10 +53,9 @@ Copyright Notice
 
 
 
-
-Thomson                  Expires March 14, 2016                 [Page 1]
+Thomson                  Expires March 25, 2016                 [Page 1]
 
-Internet-Draft             TLS Offline Config             September 2015
+Internet-Draft            TLS Offline Zero-RTT            September 2015
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -85,9 +85,9 @@ Table of Contents
    configuration.  This introduces a minimum of one round trip of
    latency to TLS connections.
 
-   TLS 1.3 [I-D.ietf-tls-tls13] describes a Zero-RTT mode of operation
-   that allows a client to send replayable data to a server.  A server
-   configuration is provided to clients in the handshake.  That
+   TLS 1.3 [I-D.ietf-tls-tls13] describes a zero round trip mode of
+   operation that allows a client to send replayable data to a server.
+   A server configuration is provided to clients in the handshake.  That
    configuration is used by the client to encrypt the first flight of
    messages it sends in subsequent connections.  While this first flight
    of messages can be replayed by an attacker, it has both
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Thomson                  Expires March 14, 2016                 [Page 2]
+Thomson                  Expires March 25, 2016                 [Page 2]
 
-Internet-Draft             TLS Offline Config             September 2015
+Internet-Draft            TLS Offline Zero-RTT            September 2015
 
 
 2.  Offline Server Configuration Format
@@ -165,9 +165,9 @@ Internet-Draft             TLS Offline Config             September 2015
 
 
 
-Thomson                  Expires March 14, 2016                 [Page 3]
+Thomson                  Expires March 25, 2016                 [Page 3]
 
-Internet-Draft             TLS Offline Config             September 2015
+Internet-Draft            TLS Offline Zero-RTT            September 2015
 
 
    enum {
@@ -205,10 +205,9 @@ Internet-Draft             TLS Offline Config             September 2015
 
    The "server_cipher_suites" extension to ServerConfiguration
    identifies the set of cipher suites that the server is willing to
-   use.  This only applies to the replayable, Zero-RTT data that the
-   client sends in its first flight; the remainder of the handshake is
-   protected using a cipher suite that is negotiated in the usual
-   fashion.
+   use.  This only applies to the replayable data that the client sends
+   in its first flight; the remainder of the handshake is protected
+   using a cipher suite that is negotiated in the usual fashion.
 
    CipherSuite ServerCipherSuites<2..2^16-2>;
 
@@ -217,26 +216,26 @@ Internet-Draft             TLS Offline Config             September 2015
    An offline server configuration MUST NOT be used if it does not
    include the "server_cipher_suites" extension.
 
-
-
-
-
-Thomson                  Expires March 14, 2016                 [Page 4]
-
-Internet-Draft             TLS Offline Config             September 2015
-
-
    A client can choose any cipher suite from this set for protecting its
    first flight.  The client MUST include the selected value in the
+
+
+
+Thomson                  Expires March 25, 2016                 [Page 4]
+
+Internet-Draft            TLS Offline Zero-RTT            September 2015
+
+
    cipher_suites field of its ClientHello.  A server MAY reject either
    the replayable data or the entire handshake if the client selects a
    cipher suite that it does not claim to support.
 
    A server MAY choose to offer a smaller set of cipher suites for use
-   in Zero-RTT than it might support for a complete TLS handshake.
-   While the set of cipher suites advertised in a server configuration
-   are not necessarily a strict subset of the cipher suites that a
-   server is prepared to support for a handshake, this could.
+   in the client's first flight than it might support for a complete TLS
+   handshake.  While the set of cipher suites advertised in a server
+   configuration are not necessarily a strict subset of the cipher
+   suites that a server is prepared to support for a handshake, this
+   could.
 
    Clients MUST NOT alter the set of cipher suites they offer based on
    the value seen in a ServerConfiguration.  While a falsified
@@ -271,26 +270,28 @@ Internet-Draft             TLS Offline Config             September 2015
 
 4.  Security Considerations
 
-   Enabling Zero-RTT in this fashion does not alter the limitations of
-   sending data in the client's first flight of messages.  In
+   Enabling zero round trip TLS in this fashion does not alter the
+   limitations of sending data in the client's first flight of messages.
+   In particular, the first flight of data from the client is not
 
 
 
 
-Thomson                  Expires March 14, 2016                 [Page 5]
+Thomson                  Expires March 25, 2016                 [Page 5]
 
-Internet-Draft             TLS Offline Config             September 2015
+Internet-Draft            TLS Offline Zero-RTT            September 2015
 
 
-   particular, Zero-RTT data is not protected from replay.  Details of
-   these limitations are provided in [I-D.ietf-tls-tls13].
+   protected from replay.  Details of these limitations are provided in
+   [I-D.ietf-tls-tls13].
 
    Server configurations that are generated offline MUST be validated.
    Failure to correctly validate the server configuration would allow an
    attacker to substitute keying material, allowing data that was
    intended for a specific server to be encrypted toward any server.
-   Though Zero-RTT data is not protected from replay, this would violate
-   the integrity and confidentiality guarantees that are provided.
+   Though the first flight from the client is not protected from replay,
+   this would violate the integrity and confidentiality guarantees that
+   are provided.
 
 5.  IANA Considerations
 
@@ -309,34 +310,39 @@ Internet-Draft             TLS Offline Config             September 2015
 
    [I-D.ietf-tls-tls13]
               Rescorla, E., "The Transport Layer Security (TLS) Protocol
-              Version 1.3", draft-ietf-tls-tls13-06 (work in progress),
-              June 2015.
+              Version 1.3", draft-ietf-tls-tls13-08 (work in progress),
+              August 2015.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, March 1997.
+              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
+              RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
 
 6.2.  Informative References
 
-   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
+   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, DOI 10.17487/
+              RFC2818, May 2000,
+              <http://www.rfc-editor.org/info/rfc2818>.
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
               within Internet Public Key Infrastructure Using X.509
               (PKIX) Certificates in the Context of Transport Layer
-              Security (TLS)", RFC 6125, March 2011.
-
-   [RFC7250]  Wouters, P., Tschofenig, H., Gilmore, J., Weiler, S., and
-              T. Kivinen, "Using Raw Public Keys in Transport Layer
-              Security (TLS) and Datagram Transport Layer Security
-              (DTLS)", RFC 7250, June 2014.
+              Security (TLS)", RFC 6125, DOI 10.17487/RFC6125, March
+              2011, <http://www.rfc-editor.org/info/rfc6125>.
 
 
 
-
-Thomson                  Expires March 14, 2016                 [Page 6]
+Thomson                  Expires March 25, 2016                 [Page 6]
 
-Internet-Draft             TLS Offline Config             September 2015
+Internet-Draft            TLS Offline Zero-RTT            September 2015
 
+
+   [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
+              Weiler, S., and T. Kivinen, "Using Raw Public Keys in
+              Transport Layer Security (TLS) and Datagram Transport
+              Layer Security (DTLS)", RFC 7250, DOI 10.17487/RFC7250,
+              June 2014, <http://www.rfc-editor.org/info/rfc7250>.
 
 Appendix A.  Acknowledgements
 
@@ -383,10 +389,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-Thomson                  Expires March 14, 2016                 [Page 7]
+Thomson                  Expires March 25, 2016                 [Page 7]
