@@ -1,6 +1,6 @@
 ---
-title: Offline Server Configuration for Transport Layer Security 1.3 Zero-RTT
-abbrev: TLS Offline Config
+title: Offline Server Configuration for Zero Round Trip Transport Layer Security
+abbrev: TLS Offline Zero-RTT
 docname: draft-thomson-tls-offline-config-latest
 date: 2015
 category: std
@@ -32,11 +32,12 @@ informative:
 
 --- abstract
 
-Zero-RTT operation in TLS relies on a client knowing about a server
+Zero round trip operation in TLS relies on a client knowing about a server
 configuration prior to establishing a connection.  TLS provides a mechanism for
 a server to provide a configuration during a handshake so that subsequent
-connections can use Zero-RTT.  This document defines a format for this
-configuration information that can be used outside of TLS.
+connections can send encrypted data in its first flight of messages.  This
+document defines a format for this configuration information that can be used
+outside of TLS.
 
 
 --- middle
@@ -47,8 +48,8 @@ A client that establishes a TLS connection to a server is unable to send any
 encrypted data to the server prior to receiving a server configuration.  This
 introduces a minimum of one round trip of latency to TLS connections.
 
-TLS 1.3 [I-D.ietf-tls-tls13] describes a Zero-RTT mode of operation that allows
-a client to send replayable data to a server.  A server configuration is
+TLS 1.3 [I-D.ietf-tls-tls13] describes a zero round trip mode of operation that
+allows a client to send replayable data to a server.  A server configuration is
 provided to clients in the handshake.  That configuration is used by the client
 to encrypt the first flight of messages it sends in subsequent connections.
 While this first flight of messages can be replayed by an attacker, it has both
@@ -139,9 +140,9 @@ the server.
 
 The `server_cipher_suites` extension to ServerConfiguration identifies the set
 of cipher suites that the server is willing to use.  This only applies to the
-replayable, Zero-RTT data that the client sends in its first flight; the
-remainder of the handshake is protected using a cipher suite that is negotiated
-in the usual fashion.
+replayable data that the client sends in its first flight; the remainder of the
+handshake is protected using a cipher suite that is negotiated in the usual
+fashion.
 
 ~~~
 CipherSuite ServerCipherSuites<2..2^16-2>;
@@ -157,11 +158,11 @@ of its ClientHello.  A server MAY reject either the replayable data or the
 entire handshake if the client selects a cipher suite that it does not claim to
 support.
 
-A server MAY choose to offer a smaller set of cipher suites for use in Zero-RTT
-than it might support for a complete TLS handshake.  While the set of cipher
-suites advertised in a server configuration are not necessarily a strict subset
-of the cipher suites that a server is prepared to support for a handshake, this
-could.
+A server MAY choose to offer a smaller set of cipher suites for use in the
+client's first flight than it might support for a complete TLS handshake.  While
+the set of cipher suites advertised in a server configuration are not
+necessarily a strict subset of the cipher suites that a server is prepared to
+support for a handshake, this could.
 
 Clients MUST NOT alter the set of cipher suites they offer based on the value
 seen in a ServerConfiguration.  While a falsified ServerConfiguration might
@@ -199,17 +200,17 @@ certificate chain to 65535 octets.
 
 # Security Considerations {#security}
 
-Enabling Zero-RTT in this fashion does not alter the limitations of sending data
-in the client's first flight of messages.  In particular, Zero-RTT data is not
-protected from replay.  Details of these limitations are provided in
-[I-D.ietf-tls-tls13].
+Enabling zero round trip TLS in this fashion does not alter the limitations of
+sending data in the client's first flight of messages.  In particular, the first
+flight of data from the client is not protected from replay.  Details of these
+limitations are provided in [I-D.ietf-tls-tls13].
 
 Server configurations that are generated offline MUST be validated.  Failure to
 correctly validate the server configuration would allow an attacker to
 substitute keying material, allowing data that was intended for a specific
-server to be encrypted toward any server.  Though Zero-RTT data is not protected
-from replay, this would violate the integrity and confidentiality guarantees
-that are provided.
+server to be encrypted toward any server.  Though the first flight from the
+client is not protected from replay, this would violate the integrity and
+confidentiality guarantees that are provided.
 
 
 # IANA Considerations {#iana}
