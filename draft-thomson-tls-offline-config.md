@@ -69,19 +69,37 @@ RFC 2119 [RFC2119] defines the terms MUST, SHOULD, and MAY.
 
 # Offline Server Configuration Format {#format}
 
-The offline server configuration is simply a signed ServerConfiguration.
-Extensions that include the additional information needed for use outside of the
-TLS handshake are defined in {{extensions}}.
+The offline server configuration is simply a ServerConfiguration, that is
+optionally signed.
 
 ~~~
 struct {
     ServerConfiguration config;
-    digitally-signed struct {
-        ServerConfiguration config;
-    };
+    select (authentication_required) {
+        case true:
+            digitally-signed struct {
+                ServerConfiguration config;
+            };
+        case false:
+            struct {};
+    }
 } OfflineServerConfiguration;
 ~~~
 {: #container title="OfflineServerConfiguration Definition"}
+
+Extensions to the ServerConfiguration object are used to convey the additional
+information needed for use outside of the TLS handshake are defined in
+{{extensions}}.  An offline configuration MUST include the certificate and
+server_cipher_suites extensions.  An offline configuration that requests or
+permits client authentication MUST include the signature_algorithms extension.
+
+
+# Offline Configuration Authentication
+
+A client MUST NOT use an offline server configuration unless it has been
+successfully authenticated, either by signature or other means.  A signature is
+therefore necessary for all delivery mechanisms that do not provide a client
+with a means to ensure the authenticity and integrity of the configuration.
 
 The process for constructing and verifying digital signatures is defined in
 [I-D.ietf-tls-tls13].  The context string for the signature on an offline server
@@ -90,12 +108,12 @@ signature and hash algorithm that are included MAY be any value that the server
 supports, provided that it is compatible with the key in the server’s end-entity
 certificate or public key [RFC7250].
 
-A client MUST NOT use an offline server configuration unless the signature is
-successfully validated against the public key in the included end-entity
-certificate.  Equally, a client MUST NOT use an offline server configuration
-unless the end-entity certificate or public key is successfully validated
-according to the rules for the using protocol and application (such as [RFC2818]
-or [RFC6125]).
+If present, the signature MUST be validated against the public key in the
+included end-entity certificate.
+
+A client MUST NOT use an offline server configuration unless the end-entity
+certificate or public key is successfully validated according to the rules for
+the using protocol and application (such as [RFC2818] or [RFC6125]).
 
 
 # Server Configuration Extensions {#extensions}
@@ -205,8 +223,9 @@ sending data in the client's first flight of messages.  In particular, the first
 flight of data from the client is not protected from replay.  Details of these
 limitations are provided in [I-D.ietf-tls-tls13].
 
-Server configurations that are generated offline MUST be validated.  Failure to
-correctly validate the server configuration would allow an attacker to
+Server configurations that are generated offline MUST include a signature,
+unless integrity and authenticity is ensured by other mechanisms.  Failure to
+properly authenticate a server configuration would allow an attacker to
 substitute keying material, allowing data that was intended for a specific
 server to be encrypted toward any server.  Though the first flight from the
 client is not protected from replay, this would violate the integrity and
