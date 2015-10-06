@@ -4,8 +4,8 @@
 
 tls                                                           M. Thomson
 Internet-Draft                                                   Mozilla
-Intended status: Standards Track                      September 30, 2015
-Expires: April 2, 2016
+Intended status: Standards Track                         October 6, 2015
+Expires: April 8, 2016
 
 
     Offline Server Configuration for Zero Round Trip Transport Layer
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 2, 2016.
+   This Internet-Draft will expire on April 8, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Thomson                   Expires April 2, 2016                 [Page 1]
+Thomson                   Expires April 8, 2016                 [Page 1]
 
-Internet-Draft            TLS Offline Zero-RTT            September 2015
+Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -69,13 +69,13 @@ Table of Contents
    3.  Offline Configuration Authentication  . . . . . . . . . . . .   3
    4.  Server Configuration Extensions . . . . . . . . . . . . . . .   4
      4.1.  Server Cipher Suites  . . . . . . . . . . . . . . . . . .   4
-     4.2.  Supported Signature and Hash Algorithms . . . . . . . . .   5
-     4.3.  Certificate . . . . . . . . . . . . . . . . . . . . . . .   6
+     4.2.  Certificate Request . . . . . . . . . . . . . . . . . . .   5
+     4.3.  Certificate . . . . . . . . . . . . . . . . . . . . . . .   5
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
      7.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   7
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   6
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   7
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Thomson                   Expires April 2, 2016                 [Page 2]
+Thomson                   Expires April 8, 2016                 [Page 2]
 
-Internet-Draft            TLS Offline Zero-RTT            September 2015
+Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 2.  Offline Server Configuration Format
@@ -138,7 +138,7 @@ Internet-Draft            TLS Offline Zero-RTT            September 2015
    are defined in Section 4.  An offline configuration MUST include the
    certificate and server_cipher_suites extensions.  An offline
    configuration that requests or permits client authentication MUST
-   include the signature_algorithms extension.
+   include the certificate_request extension.
 
 3.  Offline Configuration Authentication
 
@@ -165,9 +165,9 @@ Internet-Draft            TLS Offline Zero-RTT            September 2015
 
 
 
-Thomson                   Expires April 2, 2016                 [Page 3]
+Thomson                   Expires April 8, 2016                 [Page 3]
 
-Internet-Draft            TLS Offline Zero-RTT            September 2015
+Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
    to the rules for the using protocol and application (such as
@@ -181,7 +181,7 @@ Internet-Draft            TLS Offline Zero-RTT            September 2015
    obtain from the TLS handshake.
 
    enum {
-       server_cipher_suites(0), signature_algorithms(1),
+       server_cipher_suites(0), certificate_request(1),
        certificate(2), (65535)
    } ConfigurationExtensionType;
 
@@ -191,8 +191,8 @@ Internet-Draft            TLS Offline Zero-RTT            September 2015
        select (extension_type) {
            case server_cipher_suites:
                ServerCipherSuites;
-           case signature_algorithms:
-               SupportedSignatureAndHashAlgorithms;
+           case certificate_request:
+               CertificateRequest;
            case certificate:
                Certificate;
        } extension_data;
@@ -221,9 +221,9 @@ Internet-Draft            TLS Offline Zero-RTT            September 2015
 
 
 
-Thomson                   Expires April 2, 2016                 [Page 4]
+Thomson                   Expires April 8, 2016                 [Page 4]
 
-Internet-Draft            TLS Offline Zero-RTT            September 2015
+Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
    CipherSuite ServerCipherSuites<2..2^16-2>;
@@ -252,35 +252,19 @@ Internet-Draft            TLS Offline Zero-RTT            September 2015
    data, altering the set of cipher suites would also permit a cipher
    suite downgrade attack.
 
-4.2.  Supported Signature and Hash Algorithms
+4.2.  Certificate Request
 
-   The content of the "signature_algorithms" server configuration
-   extension is identical to that of the "signature_algorithms" hello
-   extension in both syntax and semantics.  This is included to allow
-   the client to generate Certificate and CertificateVerify messages
-   that the server is able to use.
+   The content of the "certificate_request" server configuration
+   extension is identical to that of the CertificateRequest message that
+   a server sends to request that a client authenticate in both syntax
+   and semantics.  This is included to allow the client to generate
+   Certificate and CertificateVerify messages that the server is able to
+   use.
 
-   SignatureAndHashAlgorithm
-       SupportedSignatureAndHashAlgorithms<2..2^16-2>;
-
-      Figure 4: SupportedSignatureAndHashAlgorithms Extension Format
-
-   Including the "signature_algorithms" extension is only necessary when
+   Including the "certificate_request" extension is only necessary when
    the server configuration permits client authentication.  That is,
    when the "early_data_type" is set to either "client_authentication"
    or "client_authentication_and_data".
-
-
-
-
-
-
-
-
-Thomson                   Expires April 2, 2016                 [Page 5]
-
-Internet-Draft            TLS Offline Zero-RTT            September 2015
-
 
 4.3.  Certificate
 
@@ -288,6 +272,15 @@ Internet-Draft            TLS Offline Zero-RTT            September 2015
    identical to that of the Certificate handshake message in both syntax
    and semantics.  Note however that the ServerConfiguration extension
    limits the size of the certificate chain to 65535 octets.
+
+
+
+
+
+Thomson                   Expires April 8, 2016                 [Page 5]
+
+Internet-Draft            TLS Offline Zero-RTT              October 2015
+
 
 5.  Security Considerations
 
@@ -313,7 +306,7 @@ Internet-Draft            TLS Offline Zero-RTT            September 2015
 
    o  server_cipher_suites Section 4.1
 
-   o  signature_algorithms Section 4.2
+   o  certificate_request Section 4.2
 
    o  certificate Section 4.3
 
@@ -331,18 +324,19 @@ Internet-Draft            TLS Offline Zero-RTT            September 2015
               RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
-
-
-Thomson                   Expires April 2, 2016                 [Page 6]
-
-Internet-Draft            TLS Offline Zero-RTT            September 2015
-
-
 7.2.  Informative References
 
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, DOI 10.17487/
               RFC2818, May 2000,
               <http://www.rfc-editor.org/info/rfc2818>.
+
+
+
+
+Thomson                   Expires April 8, 2016                 [Page 6]
+
+Internet-Draft            TLS Offline Zero-RTT              October 2015
+
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
@@ -389,4 +383,10 @@ Author's Address
 
 
 
-Thomson                   Expires April 2, 2016                 [Page 7]
+
+
+
+
+
+
+Thomson                   Expires April 8, 2016                 [Page 7]
