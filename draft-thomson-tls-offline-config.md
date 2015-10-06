@@ -91,7 +91,7 @@ Extensions to the ServerConfiguration object are used to convey the additional
 information needed for use outside of the TLS handshake are defined in
 {{extensions}}.  An offline configuration MUST include the certificate and
 server_cipher_suites extensions.  An offline configuration that requests or
-permits client authentication MUST include the signature_algorithms extension.
+permits client authentication MUST include the certificate_request extension.
 
 
 # Offline Configuration Authentication
@@ -124,7 +124,7 @@ information that a client would ordinarily obtain from the TLS handshake.
 
 ~~~
 enum {
-    server_cipher_suites(0), signature_algorithms(1),
+    server_cipher_suites(0), certificate_request(1),
     certificate(2), (65535)
 } ConfigurationExtensionType;
 
@@ -134,8 +134,8 @@ struct {
     select (extension_type) {
         case server_cipher_suites:
             ServerCipherSuites;
-        case signature_algorithms:
-            SupportedSignatureAndHashAlgorithms;
+        case certificate_request:
+            CertificateRequest;
         case certificate:
             Certificate;
     } extension_data;
@@ -188,21 +188,15 @@ permit an attacker to decrypt replayable data, altering the set of cipher suites
 would also permit a cipher suite downgrade attack.
 
 
-## Supported Signature and Hash Algorithms {#signature_algorithms}
+## Certificate Request {#certificate_request}
 
-The content of the `signature_algorithms` server configuration extension is
-identical to that of the `signature_algorithms` hello extension in both syntax and
-semantics.  This is included to allow the client to generate Certificate and
-CertificateVerify messages that the server is able to use.
+The content of the `certificate_request` server configuration extension is
+identical to that of the CertificateRequest message that a server sends to
+request that a client authenticate in both syntax and semantics.  This is
+included to allow the client to generate Certificate and CertificateVerify
+messages that the server is able to use.
 
-~~~
-SignatureAndHashAlgorithm
-    SupportedSignatureAndHashAlgorithms<2..2^16-2>;
-~~~
-{: #signaturealgorithms
-   title="SupportedSignatureAndHashAlgorithms Extension Format"}
-
-Including the `signature_algorithms` extension is only necessary when the server
+Including the `certificate_request` extension is only necessary when the server
 configuration permits client authentication.  That is, when the
 `early_data_type` is set to either `client_authentication` or
 `client_authentication_and_data`.
@@ -238,7 +232,7 @@ This document registers the following ServerConfiguration extensions in the
 registry established by [I-D.ietf-tls-tls13]:
 
   * server_cipher_suites {{server_cipher_suites}}
-  * signature_algorithms {{signature_algorithms}}
+  * certificate_request {{certificate_request}}
   * certificate {{certificate}}
 
 
