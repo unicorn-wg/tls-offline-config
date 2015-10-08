@@ -94,7 +94,7 @@ server_cipher_suites extensions.  An offline configuration that requests or
 permits client authentication MUST include the certificate_request extension.
 
 
-# Offline Configuration Authentication
+## Offline Configuration Authentication
 
 A client MUST NOT use an offline server configuration unless it has been
 successfully authenticated, either by signature or other means.  A signature is
@@ -124,8 +124,9 @@ information that a client would ordinarily obtain from the TLS handshake.
 
 ~~~
 enum {
-    server_cipher_suites(0), certificate_request(1),
-    certificate(2), (65535)
+    server_cipher_suites(0), certificate(1),
+    certificate_request(2), supported_groups(3),
+    (65535)
 } ConfigurationExtensionType;
 
 struct {
@@ -134,10 +135,12 @@ struct {
     select (extension_type) {
         case server_cipher_suites:
             ServerCipherSuites;
-        case certificate_request:
-            CertificateRequest;
         case certificate:
             Certificate;
+        case certificate_request:
+            CertificateRequest;
+        case supported_groups:
+            NamedGroupList;
     } extension_data;
 } ConfigurationExtension;
 
@@ -188,6 +191,14 @@ permit an attacker to decrypt replayable data, altering the set of cipher suites
 would also permit a cipher suite downgrade attack.
 
 
+## Certificate {#certificate}
+
+The content of the `certificate` server configuration extension is identical to
+that of the Certificate handshake message in both syntax and semantics.  Note
+however that the ServerConfiguration extension limits the size of the
+certificate chain to 65535 octets.
+
+
 ## Certificate Request {#certificate_request}
 
 The content of the `certificate_request` server configuration extension is
@@ -202,12 +213,13 @@ configuration permits client authentication.  That is, when the
 `client_authentication_and_data`.
 
 
-## Certificate {#certificate}
+## Supported Groups {#supported_groups}
 
-The content of the `certificate` server configuration extension is identical to
-that of the Certificate handshake message in both syntax and semantics.  Note
-however that the ServerConfiguration extension limits the size of the
-certificate chain to 65535 octets.
+The content of the `supported_groups` server configuration extension is
+identical to that of the `supported_groups` hello extension in both syntax and
+semantics.  The extension carries a NamedGroupList object as defined in
+[I-D.ietf-tls-tls13].  This is used by a client to select a client certificate
+for which the resulting signatures can be consumed by the server.
 
 
 # Security Considerations {#security}
@@ -232,8 +244,9 @@ This document registers the following ServerConfiguration extensions in the
 registry established by [I-D.ietf-tls-tls13]:
 
   * server_cipher_suites {{server_cipher_suites}}
-  * certificate_request {{certificate_request}}
   * certificate {{certificate}}
+  * certificate_request {{certificate_request}}
+  * supported_groups {{supported_groups}}
 
 
 --- back
