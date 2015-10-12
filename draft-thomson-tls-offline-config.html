@@ -475,7 +475,7 @@ ul.toc a:first-child {
 
   <meta name="dct.creator" content="Thomson, M." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-thomson-tls-offline-config-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2015-10-8" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-10-12" />
   <meta name="dct.abstract" content="Zero round trip operation in TLS relies on a client knowing about a server configuration prior to establishing a connection.  TLS provides a mechanism for a server to provide a configuration during a handshake so that subsequent connections can send encrypted data in its first flight of messages.  This document defines a format for this configuration information that can be used outside of TLS." />
   <meta name="description" content="Zero round trip operation in TLS relies on a client knowing about a server configuration prior to establishing a connection.  TLS provides a mechanism for a server to provide a configuration during a handshake so that subsequent connections can send encrypted data in its first flight of messages.  This document defines a format for this configuration information that can be used outside of TLS." />
 
@@ -497,10 +497,10 @@ ul.toc a:first-child {
 </tr>
 <tr>
   <td class="left">Intended status: Standards Track</td>
-  <td class="right">October 8, 2015</td>
+  <td class="right">October 12, 2015</td>
 </tr>
 <tr>
-  <td class="left">Expires: April 10, 2016</td>
+  <td class="left">Expires: April 14, 2016</td>
   <td class="right"></td>
 </tr>
 
@@ -521,7 +521,7 @@ ul.toc a:first-child {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 10, 2016.</p>
+<p>This Internet-Draft will expire on April 14, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -555,7 +555,7 @@ ul.toc a:first-child {
 
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a></h1>
 <p id="rfc.section.1.p.1">A client that establishes a TLS connection to a server is unable to send any encrypted data to the server prior to receiving a server configuration.  This introduces a minimum of one round trip of latency to TLS connections.</p>
-<p id="rfc.section.1.p.2">TLS 1.3 <a href="#I-D.ietf-tls-tls13">[I-D.ietf-tls-tls13]</a> describes a zero round trip mode of operation that allows a client to send replayable data to a server.  A server configuration is provided to clients in the handshake.  That configuration is used by the client to encrypt the first flight of messages it sends in subsequent connections.  While this first flight of messages can be replayed by an attacker, it has both confidentiality and integrity protection.  This enables use cases where the need to reduce latency is important, but replay protection is either not needed, or provided by other means.</p>
+<p id="rfc.section.1.p.2">TLS 1.3 <a href="#I-D.ietf-tls-tls13">[I-D.ietf-tls-tls13]</a> describes a zero round trip mode of operation that allows a client to send replayable data to a server.  A server configuration is provided to clients in an initial handshake.  That configuration is used by the client to encrypt the first flight of messages it sends in subsequent connections.  While this first flight of messages can be replayed by an attacker, it has both confidentiality and integrity protection.  This enables use cases where the need to reduce latency is important, but replay protection is either not needed, or provided by other means.</p>
 <p id="rfc.section.1.p.3">This document describes how a server configuration can be established outside of the TLS handshake.  This allows for alternative methods of delivery for the server configuration.</p>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terms" id="terms">Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">RFC 2119 <a href="#RFC2119">[RFC2119]</a> defines the terms MUST, SHOULD, and MAY.</p>
@@ -614,7 +614,7 @@ struct {
 <p><a href="#extensions">Section 3</a> shows a modified version of the ConfigurationExtension structure from <a href="#I-D.ietf-tls-tls13">[I-D.ietf-tls-tls13]</a> that includes the extensions added in this document.  These extensions are defined in detail in subsequent sections.</p>
 <h1 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#server_cipher_suites" id="server_cipher_suites">Server Cipher Suites</a></h1>
 <p id="rfc.section.3.1.p.1">A server configuration that appears in a TLS handshake is implicitly bound to the cipher suite that was negotiated in that handshake.  Outside of a TLS handshake, a client need to be able to know which cipher suites are supported by the server.</p>
-<p id="rfc.section.3.1.p.2">The <samp>server_cipher_suites</samp> extension to ServerConfiguration identifies the set of cipher suites that the server is willing to use.  This only applies to the replayable data that the client sends in its first flight; the remainder of the handshake is protected using a cipher suite that is negotiated in the usual fashion.</p>
+<p id="rfc.section.3.1.p.2">The <samp>server_cipher_suites</samp> extension to ServerConfiguration identifies the set of cipher suites that the server is willing to use.  This only applies to the replayable data that the client sends in its first flight; the remainder of the handshake is protected using a cipher suite that is negotiated in the usual fashion.  This implies that the replayable data may be protected with a different symmetric algorithm than the server ultimately selects.  The key exchange and signature algorithms MUST be the same.</p>
 <div id="rfc.figure.3"/>
 <div id="ciphersuites"/>
 <pre>
@@ -623,7 +623,7 @@ CipherSuite ServerCipherSuites&lt;2..2^16-2&gt;;
 <p class="figure">Figure 3: ServerCipherSuites Extension Format</p>
 <p id="rfc.section.3.1.p.3">An offline server configuration MUST NOT be used if it does not include the <samp>server_cipher_suites</samp> extension.</p>
 <p id="rfc.section.3.1.p.4">A client can choose any cipher suite from this set for protecting its first flight.  The client MUST include the selected value in the cipher_suites field of its ClientHello.  A server MAY reject either the replayable data or the entire handshake if the client selects a cipher suite that it does not claim to support.</p>
-<p id="rfc.section.3.1.p.5">A server MAY choose to offer a smaller set of cipher suites for use in the client&#8217;s first flight than it might support for a complete TLS handshake.  While the set of cipher suites advertised in a server configuration are not necessarily a strict subset of the cipher suites that a server is prepared to support for a handshake, this could.</p>
+<p id="rfc.section.3.1.p.5">A server MAY choose to offer a smaller set of cipher suites for use in the client&#8217;s first flight than it might support for a complete TLS handshake.</p>
 <p id="rfc.section.3.1.p.6">Clients MUST NOT alter the set of cipher suites they offer based on the value seen in a ServerConfiguration.  While a falsified ServerConfiguration might permit an attacker to decrypt replayable data, altering the set of cipher suites would also permit a cipher suite downgrade attack.</p>
 <h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#certificate" id="certificate">Certificate</a></h1>
 <p id="rfc.section.3.2.p.1">The content of the <samp>certificate</samp> server configuration extension is identical to that of the Certificate handshake message in both syntax and semantics.  Note however that the ServerConfiguration extension limits the size of the certificate chain to 65535 octets.</p>

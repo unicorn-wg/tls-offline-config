@@ -4,8 +4,8 @@
 
 tls                                                           M. Thomson
 Internet-Draft                                                   Mozilla
-Intended status: Standards Track                         October 8, 2015
-Expires: April 10, 2016
+Intended status: Standards Track                        October 12, 2015
+Expires: April 14, 2016
 
 
     Offline Server Configuration for Zero Round Trip Transport Layer
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 10, 2016.
+   This Internet-Draft will expire on April 14, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson                  Expires April 10, 2016                 [Page 1]
+Thomson                  Expires April 14, 2016                 [Page 1]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -89,13 +89,13 @@ Table of Contents
 
    TLS 1.3 [I-D.ietf-tls-tls13] describes a zero round trip mode of
    operation that allows a client to send replayable data to a server.
-   A server configuration is provided to clients in the handshake.  That
-   configuration is used by the client to encrypt the first flight of
-   messages it sends in subsequent connections.  While this first flight
-   of messages can be replayed by an attacker, it has both
-   confidentiality and integrity protection.  This enables use cases
-   where the need to reduce latency is important, but replay protection
-   is either not needed, or provided by other means.
+   A server configuration is provided to clients in an initial
+   handshake.  That configuration is used by the client to encrypt the
+   first flight of messages it sends in subsequent connections.  While
+   this first flight of messages can be replayed by an attacker, it has
+   both confidentiality and integrity protection.  This enables use
+   cases where the need to reduce latency is important, but replay
+   protection is either not needed, or provided by other means.
 
    This document describes how a server configuration can be established
    outside of the TLS handshake.  This allows for alternative methods of
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson                  Expires April 10, 2016                 [Page 2]
+Thomson                  Expires April 14, 2016                 [Page 2]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -165,7 +165,7 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 10, 2016                 [Page 3]
+Thomson                  Expires April 14, 2016                 [Page 3]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -221,14 +221,17 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 10, 2016                 [Page 4]
+Thomson                  Expires April 14, 2016                 [Page 4]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
    use.  This only applies to the replayable data that the client sends
    in its first flight; the remainder of the handshake is protected
-   using a cipher suite that is negotiated in the usual fashion.
+   using a cipher suite that is negotiated in the usual fashion.  This
+   implies that the replayable data may be protected with a different
+   symmetric algorithm than the server ultimately selects.  The key
+   exchange and signature algorithms MUST be the same.
 
    CipherSuite ServerCipherSuites<2..2^16-2>;
 
@@ -245,10 +248,7 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
    A server MAY choose to offer a smaller set of cipher suites for use
    in the client's first flight than it might support for a complete TLS
-   handshake.  While the set of cipher suites advertised in a server
-   configuration are not necessarily a strict subset of the cipher
-   suites that a server is prepared to support for a handshake, this
-   could.
+   handshake.
 
    Clients MUST NOT alter the set of cipher suites they offer based on
    the value seen in a ServerConfiguration.  While a falsified
@@ -277,7 +277,7 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 10, 2016                 [Page 5]
+Thomson                  Expires April 14, 2016                 [Page 5]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -333,7 +333,7 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 10, 2016                 [Page 6]
+Thomson                  Expires April 14, 2016                 [Page 6]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -389,4 +389,4 @@ Author's Address
 
 
 
-Thomson                  Expires April 10, 2016                 [Page 7]
+Thomson                  Expires April 14, 2016                 [Page 7]
