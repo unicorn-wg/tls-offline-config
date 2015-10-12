@@ -50,12 +50,12 @@ introduces a minimum of one round trip of latency to TLS connections.
 
 TLS 1.3 [I-D.ietf-tls-tls13] describes a zero round trip mode of operation that
 allows a client to send replayable data to a server.  A server configuration is
-provided to clients in the handshake.  That configuration is used by the client
-to encrypt the first flight of messages it sends in subsequent connections.
-While this first flight of messages can be replayed by an attacker, it has both
-confidentiality and integrity protection.  This enables use cases where the need
-to reduce latency is important, but replay protection is either not needed, or
-provided by other means.
+provided to clients in an initial handshake.  That configuration is used by the
+client to encrypt the first flight of messages it sends in subsequent
+connections.  While this first flight of messages can be replayed by an
+attacker, it has both confidentiality and integrity protection.  This enables
+use cases where the need to reduce latency is important, but replay protection
+is either not needed, or provided by other means.
 
 This document describes how a server configuration can be established outside of
 the TLS handshake.  This allows for alternative methods of delivery for the
@@ -163,7 +163,9 @@ The `server_cipher_suites` extension to ServerConfiguration identifies the set
 of cipher suites that the server is willing to use.  This only applies to the
 replayable data that the client sends in its first flight; the remainder of the
 handshake is protected using a cipher suite that is negotiated in the usual
-fashion.
+fashion.  This implies that the replayable data may be protected with a
+different symmetric algorithm than the server ultimately selects.  The key
+exchange and signature algorithms MUST be the same.
 
 ~~~
 CipherSuite ServerCipherSuites<2..2^16-2>;
@@ -180,10 +182,7 @@ entire handshake if the client selects a cipher suite that it does not claim to
 support.
 
 A server MAY choose to offer a smaller set of cipher suites for use in the
-client's first flight than it might support for a complete TLS handshake.  While
-the set of cipher suites advertised in a server configuration are not
-necessarily a strict subset of the cipher suites that a server is prepared to
-support for a handshake, this could.
+client's first flight than it might support for a complete TLS handshake.
 
 Clients MUST NOT alter the set of cipher suites they offer based on the value
 seen in a ServerConfiguration.  While a falsified ServerConfiguration might
