@@ -4,8 +4,8 @@
 
 tls                                                           M. Thomson
 Internet-Draft                                                   Mozilla
-Intended status: Standards Track                        October 12, 2015
-Expires: April 14, 2016
+Intended status: Standards Track                        October 13, 2015
+Expires: April 15, 2016
 
 
     Offline Server Configuration for Zero Round Trip Transport Layer
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 14, 2016.
+   This Internet-Draft will expire on April 15, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson                  Expires April 14, 2016                 [Page 1]
+Thomson                  Expires April 15, 2016                 [Page 1]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson                  Expires April 14, 2016                 [Page 2]
+Thomson                  Expires April 15, 2016                 [Page 2]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -165,7 +165,7 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 14, 2016                 [Page 3]
+Thomson                  Expires April 15, 2016                 [Page 3]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -221,7 +221,7 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 14, 2016                 [Page 4]
+Thomson                  Expires April 15, 2016                 [Page 4]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -277,7 +277,7 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 14, 2016                 [Page 5]
+Thomson                  Expires April 15, 2016                 [Page 5]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -316,13 +316,13 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
    This document registers the following ServerConfiguration extensions
    in the registry established by [I-D.ietf-tls-tls13]:
 
-   o  server_cipher_suites Section 3.1
+   o  server_cipher_suites (Section 3.1)
 
-   o  certificate Section 3.2
+   o  certificate (Section 3.2)
 
-   o  certificate_request Section 3.3
+   o  certificate_request (Section 3.3)
 
-   o  supported_groups Section 3.4
+   o  supported_groups (Section 3.4)
 
 6.  References
 
@@ -333,7 +333,7 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 14, 2016                 [Page 6]
+Thomson                  Expires April 15, 2016                 [Page 6]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
@@ -389,4 +389,4 @@ Author's Address
 
 
 
-Thomson                  Expires April 14, 2016                 [Page 7]
+Thomson                  Expires April 15, 2016                 [Page 7]
