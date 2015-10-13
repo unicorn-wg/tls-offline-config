@@ -242,10 +242,10 @@ confidentiality guarantees that are provided.
 This document registers the following ServerConfiguration extensions in the
 registry established by [I-D.ietf-tls-tls13]:
 
-  * server_cipher_suites {{server_cipher_suites}}
-  * certificate {{certificate}}
-  * certificate_request {{certificate_request}}
-  * supported_groups {{supported_groups}}
+  * server_cipher_suites ({{server_cipher_suites}})
+  * certificate ({{certificate}})
+  * certificate_request ({{certificate_request}})
+  * supported_groups ({{supported_groups}})
 
 
 --- back
