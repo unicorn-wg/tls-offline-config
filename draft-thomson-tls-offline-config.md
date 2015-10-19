@@ -218,7 +218,7 @@ The content of the `supported_groups` server configuration extension is
 identical to that of the `supported_groups` hello extension in both syntax and
 semantics.  The extension carries a NamedGroupList object as defined in
 [I-D.ietf-tls-tls13].  This is used by a client to select a client certificate
-for which the resulting signatures can be consumed by the server.
+for which a signature can be successfully consumed by the server.
 
 
 # Security Considerations {#security}
@@ -252,5 +252,5 @@ registry established by [I-D.ietf-tls-tls13]:
 
 # Acknowledgements {#ack}
 
-This document is better for the contributions of Wen-Teh Chang, Christian
-Huitema, Adam Langley, Eric Rescorla, and others.
+This document is better for the contributions of Karthikeyan Bhargavan, Wan-Teh
+Chang, Christian Huitema, Adam Langley, Eric Rescorla, and others.
