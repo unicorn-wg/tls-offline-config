@@ -94,38 +94,29 @@ server_cipher_suites extensions.  An offline configuration that requests or
 permits client authentication MUST include the certificate_request extension.
 
 
-## Offline Configuration Authentication
+## Offline Configuration Authentication {#authentication}
 
 A client MUST NOT use an offline server configuration unless it has been
-successfully authenticated, either by signature or other means.  A signature is
-therefore necessary for all delivery mechanisms that do not provide a client
-with a means to ensure the authenticity and integrity of the configuration.
+successfully authenticated.  This includes signature validation, plus additional
+checks on the included certificate.
+
+The signature MUST be validated against the public key in the included
+end-entity certificate (that is, the first certificate in the list of provided
+certificates, if more than one is included).
 
 The process for constructing and verifying digital signatures is defined in
 [I-D.ietf-tls-tls13].  The context string for the signature on an offline server
-configuration is "TLS 1.3, offline ServerConfiguration".  In this context, the
-signature and hash algorithm that are included MAY be any value that the server
-supports, provided that it is compatible with the key in the server’s end-entity
-certificate or public key [RFC7250].
+configuration is "TLS 1.3, offline ServerConfiguration".
 
-If present, the signature MUST be validated against the public key in the
-included end-entity certificate.
+The signature and hash algorithm that are used for signing can be any value that
+the server supports, provided that it is compatible with the key in the server’s
+end-entity certificate or public key [RFC7250].  A client that does not support
+the algorithms that the server selects will simply be unable to use the
+configuration.
 
 A client MUST NOT use an offline server configuration unless the end-entity
 certificate or public key is successfully validated according to the rules for
 the using protocol and application (such as [RFC2818] or [RFC6125]).
-
-
-## Alternative Modes of Authentication
-
-A signature over a server configuration might be redundant with other forms of
-authentication.  In these cases, care needs to be taken to avoid unknown key
-share attacks.  The precise form of validation will depend on context.
-
-Note:
-: This section is incomplete.  Unknown key-share attacks are quite likely unless
-  certain measures are taken.  Authentication of the server configuration is not
-  necessarily sufficient.
 
 
 # Server Configuration Extensions {#extensions}
@@ -239,13 +230,13 @@ sending data in the client's first flight of messages.  In particular, the first
 flight of data from the client is not protected from replay.  Details of these
 limitations are provided in [I-D.ietf-tls-tls13].
 
-Server configurations that are generated offline MUST include a signature,
-unless integrity and authenticity is ensured by other mechanisms.  Failure to
-properly authenticate a server configuration would allow an attacker to
-substitute keying material, allowing data that was intended for a specific
-server to be encrypted toward any server.  Though the first flight from the
-client is not protected from replay, this would violate the integrity and
-confidentiality guarantees that are provided.
+Server configurations that are generated offline MUST include a signature.
+Failure to properly authenticate a server configuration (see {{authentication}})
+can allow an attacker to substitute keying material, allowing data that was
+intended for a specific server to be encrypted toward a server of an attacker's
+choosing.  Though the first flight from the client is not protected from replay,
+this would violate the integrity and confidentiality guarantees that are
+provided.
 
 
 # IANA Considerations {#iana}
