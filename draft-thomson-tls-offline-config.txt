@@ -74,8 +74,8 @@ Table of Contents
      3.4.  Supported Groups  . . . . . . . . . . . . . . . . . . . .   6
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
      6.2.  Informative References  . . . . . . . . . . . . . . . . .   7
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   7
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
@@ -121,14 +121,9 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
       struct {
           ServerConfiguration config;
-          select (authentication_required) {
-              case true:
-                  digitally-signed struct {
-                      ServerConfiguration config;
-                  };
-              case false:
-                  struct {};
-          }
+          digitally-signed struct {
+              ServerConfiguration config;
+          };
       } OfflineServerConfiguration;
 
               Figure 1: OfflineServerConfiguration Definition
@@ -161,6 +156,11 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
    [RFC7250].  A client that does not support the algorithms that the
    server selects will simply be unable to use the configuration.
 
+   A client MUST NOT use an offline server configuration unless the end-
+   entity certificate or public key is successfully validated according
+   to the rules for the using protocol and application (such as
+   [RFC2818] or [RFC6125]).
+
 
 
 
@@ -169,11 +169,6 @@ Thomson                  Expires April 21, 2016                 [Page 3]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
-
-   A client MUST NOT use an offline server configuration unless the end-
-   entity certificate or public key is successfully validated according
-   to the rules for the using protocol and application (such as
-   [RFC2818] or [RFC6125]).
 
 3.  Server Configuration Extensions
 
@@ -217,7 +212,12 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
    Outside of a TLS handshake, a client need to be able to know which
    cipher suites are supported by the server.
 
-
+   The "server_cipher_suites" extension to ServerConfiguration
+   identifies the set of cipher suites that the server is willing to
+   use.  This only applies to the replayable data that the client sends
+   in its first flight; the remainder of the handshake is protected
+   using a cipher suite that is negotiated in the usual fashion.  This
+   implies that the replayable data may be protected with a different
 
 
 
@@ -226,12 +226,6 @@ Thomson                  Expires April 21, 2016                 [Page 4]
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
-   The "server_cipher_suites" extension to ServerConfiguration
-   identifies the set of cipher suites that the server is willing to
-   use.  This only applies to the replayable data that the client sends
-   in its first flight; the remainder of the handshake is protected
-   using a cipher suite that is negotiated in the usual fashion.  This
-   implies that the replayable data may be protected with a different
    symmetric algorithm than the server ultimately selects.  The key
    exchange and signature algorithms MUST be the same.
 
@@ -274,6 +268,12 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
    Certificate and CertificateVerify messages that the server is able to
    use.
 
+   Including the "certificate_request" extension is only necessary when
+   the server configuration permits client authentication.  That is,
+   when the "early_data_type" is set to either "client_authentication"
+   or "client_authentication_and_data".
+
+
 
 
 
@@ -281,11 +281,6 @@ Thomson                  Expires April 21, 2016                 [Page 5]
 
 Internet-Draft            TLS Offline Zero-RTT              October 2015
 
-
-   Including the "certificate_request" extension is only necessary when
-   the server configuration permits client authentication.  That is,
-   when the "early_data_type" is set to either "client_authentication"
-   or "client_authentication_and_data".
 
 3.4.  Supported Groups
 
@@ -326,18 +321,6 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
    o  supported_groups (Section 3.4)
 
-
-
-
-
-
-
-
-Thomson                  Expires April 21, 2016                 [Page 6]
-
-Internet-Draft            TLS Offline Zero-RTT              October 2015
-
-
 6.  References
 
 6.1.  Normative References
@@ -346,6 +329,14 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
               Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", draft-ietf-tls-tls13-09 (work in progress),
               October 2015.
+
+
+
+
+Thomson                  Expires April 21, 2016                 [Page 6]
+
+Internet-Draft            TLS Offline Zero-RTT              October 2015
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
@@ -383,6 +374,15 @@ Author's Address
    Mozilla
 
    Email: martin.thomson@gmail.com
+
+
+
+
+
+
+
+
+
 
 
 
