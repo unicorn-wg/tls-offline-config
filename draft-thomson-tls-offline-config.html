@@ -456,7 +456,6 @@ ul.toc a:first-child {
 <link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology"/>
 <link href="#rfc.section.2" rel="Chapter" title="2 Offline Server Configuration Format"/>
 <link href="#rfc.section.2.1" rel="Chapter" title="2.1 Offline Configuration Authentication"/>
-<link href="#rfc.section.2.2" rel="Chapter" title="2.2 Alternative Modes of Authentication"/>
 <link href="#rfc.section.3" rel="Chapter" title="3 Server Configuration Extensions"/>
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Server Cipher Suites"/>
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Certificate"/>
@@ -538,7 +537,6 @@ ul.toc a:first-child {
 <ul><li>1.1.   <a href="#rfc.section.1.1">Terminology</a></li>
 </ul><li>2.   <a href="#rfc.section.2">Offline Server Configuration Format</a></li>
 <ul><li>2.1.   <a href="#rfc.section.2.1">Offline Configuration Authentication</a></li>
-<li>2.2.   <a href="#rfc.section.2.2">Alternative Modes of Authentication</a></li>
 </ul><li>3.   <a href="#rfc.section.3">Server Configuration Extensions</a></li>
 <ul><li>3.1.   <a href="#rfc.section.3.1">Server Cipher Suites</a></li>
 <li>3.2.   <a href="#rfc.section.3.2">Certificate</a></li>
@@ -580,19 +578,12 @@ ul.toc a:first-child {
 </pre>
 <p class="figure">Figure 1: OfflineServerConfiguration Definition</p>
 <p id="rfc.section.2.p.2">Extensions to the ServerConfiguration object are used to convey the additional information needed for use outside of the TLS handshake are defined in <a href="#extensions">Section 3</a>.  An offline configuration MUST include the certificate and server_cipher_suites extensions.  An offline configuration that requests or permits client authentication MUST include the certificate_request extension.</p>
-<h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#offline-configuration-authentication" id="offline-configuration-authentication">Offline Configuration Authentication</a></h1>
-<p id="rfc.section.2.1.p.1">A client MUST NOT use an offline server configuration unless it has been successfully authenticated, either by signature or other means.  A signature is therefore necessary for all delivery mechanisms that do not provide a client with a means to ensure the authenticity and integrity of the configuration.</p>
-<p id="rfc.section.2.1.p.2">The process for constructing and verifying digital signatures is defined in <a href="#I-D.ietf-tls-tls13">[I-D.ietf-tls-tls13]</a>.  The context string for the signature on an offline server configuration is &#8220;TLS 1.3, offline ServerConfiguration&#8221;.  In this context, the signature and hash algorithm that are included MAY be any value that the server supports, provided that it is compatible with the key in the server&#8217;s end-entity certificate or public key <a href="#RFC7250">[RFC7250]</a>.</p>
-<p id="rfc.section.2.1.p.3">If present, the signature MUST be validated against the public key in the included end-entity certificate.</p>
-<p id="rfc.section.2.1.p.4">A client MUST NOT use an offline server configuration unless the end-entity certificate or public key is successfully validated according to the rules for the using protocol and application (such as <a href="#RFC2818">[RFC2818]</a> or <a href="#RFC6125">[RFC6125]</a>).</p>
-<h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#alternative-modes-of-authentication" id="alternative-modes-of-authentication">Alternative Modes of Authentication</a></h1>
-<p id="rfc.section.2.2.p.1">A signature over a server configuration might be redundant with other forms of authentication.  In these cases, care needs to be taken to avoid unknown key share attacks.  The precise form of validation will depend on context.</p>
-<p/>
-
-<dl>
-  <dt>Note:</dt>
-  <dd style="margin-left: 8">This section is incomplete.  Unknown key-share attacks are quite likely unless certain measures are taken.  Authentication of the server configuration is not necessarily sufficient.</dd>
-</dl>
+<h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#authentication" id="authentication">Offline Configuration Authentication</a></h1>
+<p id="rfc.section.2.1.p.1">A client MUST NOT use an offline server configuration unless it has been successfully authenticated.  This includes signature validation, plus additional checks on the included certificate.</p>
+<p id="rfc.section.2.1.p.2">The signature MUST be validated against the public key in the included end-entity certificate (that is, the first certificate in the list of provided certificates, if more than one is included).</p>
+<p id="rfc.section.2.1.p.3">The process for constructing and verifying digital signatures is defined in <a href="#I-D.ietf-tls-tls13">[I-D.ietf-tls-tls13]</a>.  The context string for the signature on an offline server configuration is &#8220;TLS 1.3, offline ServerConfiguration&#8221;.</p>
+<p id="rfc.section.2.1.p.4">The signature and hash algorithm that are used for signing can be any value that the server supports, provided that it is compatible with the key in the server&#8217;s end-entity certificate or public key <a href="#RFC7250">[RFC7250]</a>.  A client that does not support the algorithms that the server selects will simply be unable to use the configuration.</p>
+<p id="rfc.section.2.1.p.5">A client MUST NOT use an offline server configuration unless the end-entity certificate or public key is successfully validated according to the rules for the using protocol and application (such as <a href="#RFC2818">[RFC2818]</a> or <a href="#RFC6125">[RFC6125]</a>).</p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#extensions" id="extensions">Server Configuration Extensions</a></h1>
 <p id="rfc.section.3.p.1">The offline server configuration uses the same ServerConfiguration format that is defined in <a href="#I-D.ietf-tls-tls13">[I-D.ietf-tls-tls13]</a>, with extensions to carry the additional information that a client would ordinarily obtain from the TLS handshake.</p>
 <div id="rfc.figure.2"/>
@@ -643,7 +634,7 @@ ul.toc a:first-child {
 <p id="rfc.section.3.4.p.1">The content of the <samp>supported_groups</samp> server configuration extension is identical to that of the <samp>supported_groups</samp> hello extension in both syntax and semantics.  The extension carries a NamedGroupList object as defined in <a href="#I-D.ietf-tls-tls13">[I-D.ietf-tls-tls13]</a>.  This is used by a client to select a client certificate for which a signature can be successfully consumed by the server.</p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#security" id="security">Security Considerations</a></h1>
 <p id="rfc.section.4.p.1">Enabling zero round trip TLS in this fashion does not alter the limitations of sending data in the client&#8217;s first flight of messages.  In particular, the first flight of data from the client is not protected from replay.  Details of these limitations are provided in <a href="#I-D.ietf-tls-tls13">[I-D.ietf-tls-tls13]</a>.</p>
-<p id="rfc.section.4.p.2">Server configurations that are generated offline MUST include a signature, unless integrity and authenticity is ensured by other mechanisms.  Failure to properly authenticate a server configuration would allow an attacker to substitute keying material, allowing data that was intended for a specific server to be encrypted toward any server.  Though the first flight from the client is not protected from replay, this would violate the integrity and confidentiality guarantees that are provided.</p>
+<p id="rfc.section.4.p.2">Server configurations that are generated offline MUST include a signature.  Failure to properly authenticate a server configuration (see <a href="#authentication">Section 2.1</a>) can allow an attacker to substitute keying material, allowing data that was intended for a specific server to be encrypted toward a server of an attacker&#8217;s choosing.  Though the first flight from the client is not protected from replay, this would violate the integrity and confidentiality guarantees that are provided.</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
 <p id="rfc.section.5.p.1">This document registers the following ServerConfiguration extensions in the registry established by <a href="#I-D.ietf-tls-tls13">[I-D.ietf-tls-tls13]</a>:</p>
 <p/>
