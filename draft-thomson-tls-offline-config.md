@@ -73,17 +73,17 @@ The offline server configuration is simply a ServerConfiguration, that is
 optionally signed.
 
 ~~~
-struct {
-    ServerConfiguration config;
-    select (authentication_required) {
-        case true:
-            digitally-signed struct {
-                ServerConfiguration config;
-            };
-        case false:
-            struct {};
-    }
-} OfflineServerConfiguration;
+   struct {
+       ServerConfiguration config;
+       select (authentication_required) {
+           case true:
+               digitally-signed struct {
+                   ServerConfiguration config;
+               };
+           case false:
+               struct {};
+       }
+   } OfflineServerConfiguration;
 ~~~
 {: #container title="OfflineServerConfiguration Definition"}
 
@@ -116,6 +116,18 @@ certificate or public key is successfully validated according to the rules for
 the using protocol and application (such as [RFC2818] or [RFC6125]).
 
 
+## Alternative Modes of Authentication
+
+A signature over a server configuration might be redundant with other forms of
+authentication.  In these cases, care needs to be taken to avoid unknown key
+share attacks.  The precise form of validation will depend on context.
+
+Note:
+: This section is incomplete.  Unknown key-share attacks are quite likely unless
+  certain measures are taken.  Authentication of the server configuration is not
+  necessarily sufficient.
+
+
 # Server Configuration Extensions {#extensions}
 
 The offline server configuration uses the same ServerConfiguration format that
@@ -123,27 +135,26 @@ is defined in [I-D.ietf-tls-tls13], with extensions to carry the additional
 information that a client would ordinarily obtain from the TLS handshake.
 
 ~~~
-enum {
-    server_cipher_suites(0), certificate(1),
-    certificate_request(2), supported_groups(3),
-    (65535)
-} ConfigurationExtensionType;
+   enum {
+       server_cipher_suites(0), certificate(1),
+       certificate_request(2), supported_groups(3),
+       (65535)
+   } ConfigurationExtensionType;
 
-struct {
-    ConfigurationExtensionType extension_type;
-    uint16 length;
-    select (extension_type) {
-        case server_cipher_suites:
-            ServerCipherSuites;
-        case certificate:
-            Certificate;
-        case certificate_request:
-            CertificateRequest;
-        case supported_groups:
-            NamedGroupList;
-    } extension_data;
-} ConfigurationExtension;
-
+   struct {
+       ConfigurationExtensionType extension_type;
+       uint16 length;
+       select (extension_type) {
+           case server_cipher_suites:
+               ServerCipherSuites;
+           case certificate:
+               Certificate;
+           case certificate_request:
+               CertificateRequest;
+           case supported_groups:
+               NamedGroupList;
+       } extension_data;
+   } ConfigurationExtension;
 ~~~
 {: #configext title="ServerConfiguration Extension Additions"}
 
@@ -168,7 +179,7 @@ different symmetric algorithm than the server ultimately selects.  The key
 exchange and signature algorithms MUST be the same.
 
 ~~~
-CipherSuite ServerCipherSuites<2..2^16-2>;
+   CipherSuite ServerCipherSuites<2..2^16-2>;
 ~~~
 {: #ciphersuites title="ServerCipherSuites Extension Format"}
 
