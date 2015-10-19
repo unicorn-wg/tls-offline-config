@@ -75,14 +75,9 @@ optionally signed.
 ~~~
    struct {
        ServerConfiguration config;
-       select (authentication_required) {
-           case true:
-               digitally-signed struct {
-                   ServerConfiguration config;
-               };
-           case false:
-               struct {};
-       }
+       digitally-signed struct {
+           ServerConfiguration config;
+       };
    } OfflineServerConfiguration;
 ~~~
 {: #container title="OfflineServerConfiguration Definition"}
