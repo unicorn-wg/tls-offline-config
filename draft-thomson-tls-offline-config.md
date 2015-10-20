@@ -69,8 +69,8 @@ RFC 2119 [RFC2119] defines the terms MUST, SHOULD, and MAY.
 
 # Offline Server Configuration Format {#format}
 
-The offline server configuration is simply a ServerConfiguration, that is
-optionally signed.
+The offline server configuration is simply a ServerConfiguration that is
+signed.
 
 ~~~
    struct {
