@@ -4,8 +4,8 @@
 
 tls                                                           M. Thomson
 Internet-Draft                                                   Mozilla
-Intended status: Standards Track                        October 20, 2015
-Expires: April 22, 2016
+Intended status: Standards Track                       December 14, 2015
+Expires: June 16, 2016
 
 
     Offline Server Configuration for Zero Round Trip Transport Layer
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 22, 2016.
+   This Internet-Draft will expire on June 16, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Thomson                  Expires April 22, 2016                 [Page 1]
+Thomson                   Expires June 16, 2016                 [Page 1]
 
-Internet-Draft            TLS Offline Zero-RTT              October 2015
+Internet-Draft            TLS Offline Zero-RTT             December 2015
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Thomson                  Expires April 22, 2016                 [Page 2]
+Thomson                   Expires June 16, 2016                 [Page 2]
 
-Internet-Draft            TLS Offline Zero-RTT              October 2015
+Internet-Draft            TLS Offline Zero-RTT             December 2015
 
 
 2.  Offline Server Configuration Format
@@ -165,9 +165,9 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 22, 2016                 [Page 3]
+Thomson                   Expires June 16, 2016                 [Page 3]
 
-Internet-Draft            TLS Offline Zero-RTT              October 2015
+Internet-Draft            TLS Offline Zero-RTT             December 2015
 
 
 3.  Server Configuration Extensions
@@ -221,9 +221,9 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 22, 2016                 [Page 4]
+Thomson                   Expires June 16, 2016                 [Page 4]
 
-Internet-Draft            TLS Offline Zero-RTT              October 2015
+Internet-Draft            TLS Offline Zero-RTT             December 2015
 
 
    symmetric algorithm than the server ultimately selects.  The key
@@ -277,9 +277,9 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
 
 
-Thomson                  Expires April 22, 2016                 [Page 5]
+Thomson                   Expires June 16, 2016                 [Page 5]
 
-Internet-Draft            TLS Offline Zero-RTT              October 2015
+Internet-Draft            TLS Offline Zero-RTT             December 2015
 
 
 3.4.  Supported Groups
@@ -327,26 +327,26 @@ Internet-Draft            TLS Offline Zero-RTT              October 2015
 
    [I-D.ietf-tls-tls13]
               Rescorla, E., "The Transport Layer Security (TLS) Protocol
-              Version 1.3", draft-ietf-tls-tls13-09 (work in progress),
+              Version 1.3", draft-ietf-tls-tls13-10 (work in progress),
               October 2015.
 
 
 
 
-Thomson                  Expires April 22, 2016                 [Page 6]
+Thomson                   Expires June 16, 2016                 [Page 6]
 
-Internet-Draft            TLS Offline Zero-RTT              October 2015
+Internet-Draft            TLS Offline Zero-RTT             December 2015
 
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
-              RFC2119, March 1997,
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
 6.2.  Informative References
 
-   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, DOI 10.17487/
-              RFC2818, May 2000,
+   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818,
+              DOI 10.17487/RFC2818, May 2000,
               <http://www.rfc-editor.org/info/rfc2818>.
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
@@ -389,4 +389,4 @@ Author's Address
 
 
 
-Thomson                  Expires April 22, 2016                 [Page 7]
+Thomson                   Expires June 16, 2016                 [Page 7]
